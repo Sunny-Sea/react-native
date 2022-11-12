@@ -1,48 +1,27 @@
-import React, { useState } from "react";
-import { Button, StyleSheet, Text, View } from "react-native";
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: "#fff",
-        alignItems: "center",
-        justifyContent: "center",
-    },
-});
-
-const Comp = props => {
-    const [state, setState] = useState(1);
-    return (
-        <View>
-            <Text>
-                A:{props.a}, 年龄: {props.aAge}
-            </Text>
-            <Text>{state}</Text>
-            <Button
-                title="+1"
-                onPress={() => setState(prev => setState(prev + 1))}
-            ></Button>
-        </View>
-    );
-};
+import React from 'react'
+import { View, Button, StyleSheet } from 'react-native'
 
 const App = () => {
+
+    const styles = StyleSheet.create({
+        container: {
+            flex: 1,
+            alignItems: "center",
+            justifyContent: "center",
+            backgroundColor: "#fff"
+        }
+    })
+
+    const handleFetch = async () => {
+        return await fetch("https://cnodejs.org/api/v1/topics").then((resp) =>
+            resp.json()).then((resp) => console.log(resp)).catch(err => console.log(err));
+    }
+
     return (
         <View style={styles.container}>
-            <Comp
-                a="a"
-                aAge={18}
-            />
-            <Comp
-                a="aa"
-                aAge={18}
-            />
-            <Comp
-                a="aaa"
-                aAge={18}
-            />
+            <Button onPress={handleFetch} title="点击获取数据" />
         </View>
-    );
-};
+    )
+}
 
-export default App;
+export default App
