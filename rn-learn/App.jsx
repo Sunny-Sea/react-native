@@ -2,7 +2,8 @@ import React from "react";
 // import SwitchComp from "./components/Switch";
 // import ButtonComp from "./components/Button";
 // import ImageComp from "./components/Image";
-import TextInputComp from "./components/TextInput";
+// import TextInputComp from "./components/TextInput";
+import VesselComp from "./components/VesselComp";
 
 const App = () => {
     return (
@@ -10,7 +11,8 @@ const App = () => {
             {/* <ButtonComp /> */}
             {/* <ImageComp /> */}
             {/* <SwitchComp /> */}
-            <TextInputComp />
+            {/* <TextInputComp /> */}
+            <VesselComp />
         </>
     );
 };
