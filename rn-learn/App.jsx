@@ -3,7 +3,8 @@ import React from "react";
 // import ButtonComp from "./components/Button";
 // import ImageComp from "./components/Image";
 // import TextInputComp from "./components/TextInput";
-import VesselComp from "./components/VesselComp";
+// import VesselComp from "./components/VesselComp";
+import Pressable from "./components/Pressable";
 
 const App = () => {
     return (
@@ -12,7 +13,8 @@ const App = () => {
             {/* <ImageComp /> */}
             {/* <SwitchComp /> */}
             {/* <TextInputComp /> */}
-            <VesselComp />
+            {/* <VesselComp /> */}
+            <Pressable />
         </>
     );
 };
