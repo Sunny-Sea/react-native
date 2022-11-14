@@ -51,7 +51,6 @@ const FlatListMovie = (props) => {
             flex: 1,
         },
     });
-    // console.log(1111);
 
     return (
         <Pressable onPress={props.onPress}>
