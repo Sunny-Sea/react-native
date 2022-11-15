@@ -1,64 +1,37 @@
 import { useState, useEffect } from "react";
+import { SectionList, View, Text, Dimensions, ActivityIndicator, StyleSheet } from "react-native";
+import { queryMovies } from "./data/Service";
 import FlatListMovie from "./components/FlatList";
-import {
-    View,
-    Text,
-    StyleSheet,
-    Dimensions,
-    FlatList,
-    ActivityIndicator,
-    Alert,
-} from "react-native";
-import { queryMovies, randomRefreshMovies } from "./data/Service";
 
 const App = () => {
     const [data, setData] = useState([]);
     const [loading, setLoading] = useState(false);
-    const [refreshHeader, setRefreshHeader] = useState(false);
-    const [refreshFooter, setRefreshFooter] = useState(false);
 
-    let currentPage = 1;
-    const pageSize = 10;
-    let totalPage = Math.ceil(data.length / pageSize);
-    const movieData = queryMovies();
-
+    const windowHeight = Dimensions.get("window").height;
     const windowWidth = Dimensions.get("window").width;
-    // const windowHeight = Dimensions.get("window").height;
+    const title1 = queryMovies(1, 10);
+    const title2 = queryMovies(2, 10);
 
-    // 模拟数据请求
     useEffect(() => {
         setTimeout(() => {
-            setData((prev) => movieData);
-            data && setLoading(true);
+            setData([
+                {
+                    title: "正在热映",
+                    data: title1,
+                },
+                {
+                    title: "即将上映",
+                    data: title2,
+                },
+            ]);
+            setLoading((prev) => true);
         }, 1000);
-    }, [movieData.length]);
-
-    // 下拉刷新
-    const refreshHeaderFn = () => {
-        setRefreshHeader((prev) => true);
-        setTimeout(() => {
-            setData((prev) => [...prev, ...randomRefreshMovies()]);
-            setRefreshHeader((prev) => false);
-        }, 1000);
-    };
-
-    // 上拉加载
-    const refreshFooterFn = () => {
-        setRefreshFooter((prev) => true);
-        if (currentPage < totalPage) {
-            currentPage++;
-            setTimeout(() => {
-                setData((prev) => [...prev, ...queryMovies(currentPage, pageSize)]);
-                setRefreshFooter((prev) => false);
-            }, 1000);
-        }
-    };
+    }, []);
 
     const styles = StyleSheet.create({
         flex: {
             flex: 1,
-            backgroundColor: "#268dcd",
-            paddingTop: 30,
+            backgroundColor: "#fff",
         },
         container: {
             flex: 1,
@@ -67,16 +40,34 @@ const App = () => {
             backgroundColor: "#F5FCFF",
             flexDirection: "row",
         },
+        loadingView: {
+            flex: 1,
+            height: windowHeight,
+            backgroundColor: "#F5FCFF",
+            flexDirection: "row",
+            justifyContent: "center",
+            alignItems: "center",
+            padding: 10,
+        },
         barStyle: {
             height: 48,
             width: windowWidth,
             justifyContent: "center",
-            backgroundColor: "#268dcd",
+            backgroundColor: "#fff",
         },
         txtStyle: {
-            color: "#fff",
+            color: "#000",
             textAlign: "center",
             fontSize: 18,
+        },
+        sectionHeader: {
+            padding: 10,
+            backgroundColor: "#268dcd",
+        },
+        sectionTitle: {
+            fontSize: 16,
+            fontWeight: "bold",
+            color: "#fff",
         },
     });
 
@@ -87,30 +78,28 @@ const App = () => {
             </View>
             {!loading && (
                 <View style={styles.container}>
-                    <ActivityIndicator size="large" color="#268dcd" />
-                    <Text
-                        style={{
-                            color: "#666",
-                            paddingLeft: 10,
-                        }}
-                    >
-                        努力加载中
-                    </Text>
+                    <ActivityIndicator size="large" animating={true} />
+                    <Text style={{ color: "#666666", paddingLeft: 10 }}>正在加载中...</Text>
                 </View>
             )}
-            <FlatList
-                data={data}
+            <SectionList
+                sections={data}
                 renderItem={({ item }) => (
                     <FlatListMovie
                         movie={item}
-                        onPress={() => Alert.alert(`电影名${item.title}`)}
+                        onPress={() => {
+                            alert(`电影名: ${item.title}`);
+                        }}
                     />
                 )}
                 keyExtractor={(item) => item.id}
-                refreshing={refreshHeader}
-                onRefresh={refreshHeaderFn}
-                onEndReached={refreshFooterFn}
-                onEndReachedThreshold={0.1}
+                renderSectionHeader={({ section }) => (
+                    <View style={styles.sectionHeader}>
+                        {/* {console.log(section)} */}
+                        <Text style={styles.sectionTitle}>{section.title}</Text>
+                    </View>
+                )}
+                stickySectionHeadersEnabled={true}
             />
         </View>
     );
